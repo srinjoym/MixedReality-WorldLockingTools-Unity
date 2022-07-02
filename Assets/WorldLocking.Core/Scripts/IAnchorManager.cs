@@ -1,16 +1,29 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.MixedReality.WorldLocking.Core
 {
+    public struct NearbyAnchorsData
+    {
+        public int NumAnchors;
+        public int NumInvalidAnchors;
+    }
+
     /// <summary>
     /// Create and persist a network of anchors around the camera as it moves around,
     /// and feed them into the plugin.
     /// </summary>
     public interface IAnchorManager : System.IDisposable
     {
+        /// <summary>
+        /// Fired when there are no anchors < 5 hops within inner sphere and
+        /// we previously placed anchors
+        /// </summary>
+        public event EventHandler<NearbyAnchorsData> NearbyAnchorsUnreliable;
+
         /// <summary>
         /// Whether the underlying anchors can be locally persisted and reloaded.
         /// </summary>

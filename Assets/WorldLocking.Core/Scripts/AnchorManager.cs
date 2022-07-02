@@ -22,6 +22,9 @@ using UnityEngine.XR;
 using System.IO;
 #endif // WLT_DUMP_SPONGY
 
+using Microsoft.MixedReality.OpenXR.Internal;
+using Microsoft.MixedReality.Toolkit.Utilities;
+
 
 namespace Microsoft.MixedReality.WorldLocking.Core
 {
@@ -46,6 +49,8 @@ namespace Microsoft.MixedReality.WorldLocking.Core
     /// </remarks>
     public abstract class AnchorManager : IAnchorManager
     {
+        public event EventHandler<NearbyAnchorsData> NearbyAnchorsUnreliable;
+
         /// <inheritdoc/>
         public abstract bool SupportsPersistence { get; }
 
@@ -242,6 +247,7 @@ namespace Microsoft.MixedReality.WorldLocking.Core
             var activeAnchors = new List<AnchorPose>();
             var innerSphereAnchorIds = new List<AnchorId>();
             var outerSphereAnchorIds = new List<AnchorId>();
+            var innerSphereBadAnchorIds = new List<AnchorId>();
 
             float minDistSqr = float.PositiveInfinity;
             AnchorId minDistAnchorId = 0;
@@ -277,6 +283,19 @@ namespace Microsoft.MixedReality.WorldLocking.Core
                         if (distSqr <= innerSphereRadSqr)
                         {
                             innerSphereAnchorIds.Add(id);
+
+                            var arf = a as SpongyAnchorARF;
+                            if (arf != null)
+                            {
+                                // int numHops = AnchorQuality.GetAnchorNumHops(arf.TrackableId);
+                                float poseLinkDistance = AnchorQuality.GetAnchorPoseLinkDistance(arf.TrackableId);
+                                float distToCamera = Vector3.Distance(CameraCache.Main.transform.position, a.gameObject.transform.position);
+                                float ratio = poseLinkDistance > 0 ? distToCamera / poseLinkDistance:1;
+                                if (ratio < 0.2)
+                                {
+                                    innerSphereBadAnchorIds.Add(id);
+                                }
+                            }
                         }
                     }
                     if (distSqr > maxDistSq)
@@ -286,6 +305,16 @@ namespace Microsoft.MixedReality.WorldLocking.Core
                         maxDistSpongyAnchor = a;
                     }
                 }
+            }
+
+            if (innerSphereBadAnchorIds.Count > 0)
+            {
+                var data = new NearbyAnchorsData()
+                {
+                    NumAnchors = innerSphereAnchorIds.Count,
+                    NumInvalidAnchors = innerSphereBadAnchorIds.Count
+                };
+                NearbyAnchorsUnreliable?.Invoke(this, data);
             }
 
             if (newId == 0 && innerSphereAnchorIds.Count == 0)

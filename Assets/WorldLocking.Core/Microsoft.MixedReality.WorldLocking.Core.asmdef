@@ -10,7 +10,9 @@
         "Microsoft.MixedReality.OpenXR",
         "Unity.XR.WindowsMixedReality",
         "Unity.XR.Management",
-        "Unity.XR.OpenXR"
+        "Unity.XR.OpenXR",
+        "Microsoft.MixedReality.OpenXR.Internal",
+        "Microsoft.MixedReality.Toolkit"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
