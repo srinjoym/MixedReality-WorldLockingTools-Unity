@@ -3,13 +3,30 @@
 
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Microsoft.MixedReality.WorldLocking.Core
 {
     public struct NearbyAnchorsData
     {
-        public int NumAnchors;
-        public int NumInvalidAnchors;
+        // public int NumAnchors;
+        // public int NumInvalidAnchors;
+        public List<AnchorId> InnerSphereAnchorIds;
+        public List<AnchorId> OuterSphereAnchorIds;
+        public List<AnchorId> InnerSphereInvalidAnchorIds;
+        public List<AnchorId> OuterSphereInvalidAnchorIds;
+    }
+
+    public enum AnchorQualityFunction
+    {
+        NumHops = 0,
+        PoseLinkDistanceRatio = 1
+    }
+
+    public struct AnchorQualityMetricData
+    {
+        public AnchorQualityFunction AnchorQualityFunction;
+        public float Threshold;
     }
 
     /// <summary>
@@ -22,7 +39,7 @@ namespace Microsoft.MixedReality.WorldLocking.Core
         /// Fired when there are no anchors < 5 hops within inner sphere and
         /// we previously placed anchors
         /// </summary>
-        public event EventHandler<NearbyAnchorsData> NearbyAnchorsUnreliable;
+        // public event EventHandler<NearbyAnchorsData> NearbyAnchorsUnreliable;
 
         /// <summary>
         /// Whether the underlying anchors can be locally persisted and reloaded.
@@ -78,6 +95,13 @@ namespace Microsoft.MixedReality.WorldLocking.Core
         /// It may also vary over time (so don't cache this).
         /// </remarks>
         UnityEngine.Pose AnchorFromSpongy { get; }
+
+        List<AnchorId> InnerSphereAnchorIds { get; set;  }
+        List<AnchorId> OuterSphereAnchorIds { get;  set; }
+        List<AnchorId> InnerSphereInvalidAnchorIds { get; set;  }
+        List<AnchorId> OuterSphereInvalidAnchorIds { get;  set; }
+
+        AnchorQualityMetricData AnchorQualityMetric { get; set; }
 
         /// <summary>
         /// Delete all spongy anchor objects and reset internal state
