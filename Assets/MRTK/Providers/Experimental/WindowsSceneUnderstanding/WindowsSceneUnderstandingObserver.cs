@@ -1110,7 +1110,7 @@ namespace Microsoft.MixedReality.Toolkit.WindowsSceneUnderstanding.Experimental
 
             var meshRenderer = meshGo.AddComponent<MeshRenderer>();
 
-            meshGo.AddComponent<MeshCollider>();
+            // meshGo.AddComponent<MeshCollider>();
 
             if (DefaultMaterial)
             {
@@ -1140,7 +1140,7 @@ namespace Microsoft.MixedReality.Toolkit.WindowsSceneUnderstanding.Experimental
 
             var meshRenderer = quadGo.AddComponent<MeshRenderer>();
 
-            quadGo.AddComponent<BoxCollider>();
+            // quadGo.AddComponent<BoxCollider>();
 
             if (DefaultMaterial)
             {

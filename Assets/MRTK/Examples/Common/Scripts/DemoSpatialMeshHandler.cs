@@ -98,7 +98,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos
         protected void AddToData(int eventDataId)
         {
             // A new mesh has been added.
-            Debug.Log($"Started tracking mesh {eventDataId}");
+            // Debug.Log($"Started tracking mesh {eventDataId}");
             meshUpdateData.Add(eventDataId, 0);
         }
 
@@ -113,7 +113,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos
                 // Set the new update count.
                 meshUpdateData[eventDataId] = ++updateCount;
 
-                Debug.Log($"Mesh {eventDataId} has been updated {updateCount} times.");
+                // Debug.Log($"Mesh {eventDataId} has been updated {updateCount} times.");
             }
         }
 
@@ -125,7 +125,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos
             // A mesh has been removed. We no longer need to track the count of updates.
             if (meshUpdateData.ContainsKey(eventDataId))
             {
-                Debug.Log($"No longer tracking mesh {eventDataId}.");
+                // Debug.Log($"No longer tracking mesh {eventDataId}.");
                 meshUpdateData.Remove(eventDataId);
             }
         }

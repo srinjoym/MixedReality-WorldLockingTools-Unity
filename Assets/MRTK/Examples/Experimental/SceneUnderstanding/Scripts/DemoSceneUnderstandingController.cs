@@ -7,6 +7,7 @@ using Microsoft.MixedReality.Toolkit.SpatialAwareness;
 using Microsoft.MixedReality.Toolkit.UI;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityFBXExporter;
 
 namespace Microsoft.MixedReality.Toolkit.Experimental.SceneUnderstanding
 {
@@ -164,6 +165,14 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.SceneUnderstanding
             {
                 sceneObjectDict?.Remove(eventData.Id);
             }
+        }
+
+        public void ExportMesh()
+        {
+            var spatialObserver = observer as BaseSpatialObserver;
+            string path = Application.persistentDataPath + "/TestMesh.fbx";
+            FBXExporter.ExportGameObjToFBX(spatialObserver.ObservationParent, path);
+            Debug.Log($"Wrote mesh to {path}");
         }
 
         #endregion IMixedRealitySpatialAwarenessObservationHandler Implementations
